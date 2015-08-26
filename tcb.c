@@ -1,10 +1,12 @@
 /************************************************
-  Task Controler
+  Simple Function Scheduler
   
-  $Id:$
+  $Id$
 *************************************************/
-/* #include <stdio.h> /**/
-/* #define dbg_printf(s) printf(s);  /**/
+/*
+#include <stdio.h>
+#define dbg_printf(s) printf(s);
+*/
 #define dbg_printf(s)   /**/
 
 #include "tcb.h"
@@ -65,6 +67,8 @@ short TCB_initialize(void)
 
   pPool = &TCB[HEAD];
   pTask = TCB_NULL;
+
+  return 0;
 }
 
 short TCB_dispatch(void)
