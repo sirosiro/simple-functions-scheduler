@@ -1,4 +1,4 @@
-COMMTOOLS=tcb.c
+COMMTOOLS=sfs.c
 CSRCS=test.c
 
 OBJS=$(CSRCS:.c=.o) $(COMMTOOLS:.c=.o)
