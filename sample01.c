@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include "sfs.h"
 
-static struct workspace 
-{
+struct workspace {
 	unsigned int task_no;
 };
 

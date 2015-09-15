@@ -4,12 +4,10 @@
 void task1(void)
 {
 	printf("task1!\n");
-	return;
 }
 void task2(void)
 {
 	printf("task2!\n");
-	return;
 }
 int main(void)
 {

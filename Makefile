@@ -1,5 +1,5 @@
 COMMTOOLS=sfs.c
-CSRCS=sample00.c sample01.c
+CSRCS=sample00.c sample01.c sample02.c
 
 OBJS=$(CSRCS:.c=.o) $(COMMTOOLS:.c=.o)
 PROGS=$(CSRCS:.c=.exe)
