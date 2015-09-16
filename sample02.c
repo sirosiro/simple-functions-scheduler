@@ -29,5 +29,5 @@ int main(void)
 
 	printf("All tasks was end.\n");
 
-	return 1;
+	return 0;
 }

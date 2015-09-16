@@ -43,5 +43,5 @@ int main(void)
 	while(loop--)
 		SFS_dispatch();
 
-	return 1;
+	return 0;
 }
