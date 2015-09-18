@@ -45,7 +45,7 @@ int main(void)
 {
 	SFS_initialize();
 
-	SFS_fork("Regist TAS2K",0,regist_task2);
+	SFS_fork("Regist TASK2",0,regist_task2);
 	SFS_fork("TASK1",0,task1);
 
 	while(SFS_dispatch());

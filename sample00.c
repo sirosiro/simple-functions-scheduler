@@ -11,7 +11,7 @@ void task2(void)
 }
 int main(void)
 {
-	int loop=10;
+	int loop=5;
 
 	SFS_initialize();
 

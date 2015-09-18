@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include "sfs.h"
 
-int execution_count_of_task1 = 5;
-int execution_count_of_task2 = 10;
+int execution_count_of_task1 = 6;
+int execution_count_of_task2 = 3;
 
 void task1(void)
 {
