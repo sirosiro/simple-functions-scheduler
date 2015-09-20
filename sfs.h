@@ -66,7 +66,7 @@ extern short SFS_fork(char *,short,void (*)());
 extern void *SFS_work(void);
 extern void *SFS_otherWork(char *);
 extern short SFS_kill(void);
-extern short SFS_change(char *,void (*)());
+extern short SFS_change(char *,short,void (*)());
 
 #endif
 /* [EOF] */

@@ -24,11 +24,11 @@ void task2(void)
 	struct workspace *ws;
 	ws = SFS_work();
 
-	if(!ws->count){
+	if(ws->count){
+		printf("task2 count:%d\n",ws->count);
+	}else{
 		printf("task2 end\n");
 		SFS_kill();
-	}else{
-		printf("task2 count:%d\n",ws->count);
 	}
 }
 
@@ -38,15 +38,15 @@ void regist_task2(void)
 	ws = SFS_work();
 
 	ws->count = 5;
-	SFS_change("TASK2", task2);
+	SFS_change("TASK2", 1, task2);
 }
 
 int main(void)
 {
 	SFS_initialize();
 
+	SFS_fork("TASK1",1,task1);
 	SFS_fork("Regist TASK2",0,regist_task2);
-	SFS_fork("TASK1",0,task1);
 
 	while(SFS_dispatch());
 

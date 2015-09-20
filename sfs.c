@@ -23,7 +23,7 @@ short SFS_fork(char *,short,void (*)());
 void *SFS_work(void);
 void *SFS_otherWork(char *);
 short SFS_kill(void);
-short SFS_change(char *,void (*)());
+short SFS_change(char *,short,void (*)());
 
 /*-------------------- static function & variable --------------------*/
 static struct SFS_tg SFS[BODY];
@@ -133,10 +133,11 @@ dbg_printf("kill !\n");
   return 0;
 }
 
-short SFS_change(char *name,void (*func)())
+short SFS_change(char *name,short order,void (*func)())
 {
   if(exe!=SFS_NULL){
     strncpy(exe->name,name,SFS_NAME_SIZE);
+    exe->order = order;
     exe->pFunction = func;
   }
 dbg_printf("change !!\n");

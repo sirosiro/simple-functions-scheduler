@@ -12,13 +12,13 @@ The SFS library are not depend to any platform and any compiler but the sample p
  make gcov  
 
 ## Description of sample programs
-*sample00.c:* Two functions basic scheduling. used function of the SFS are *SFS_initialze*, *SFS_fork* and *SFS_dispatch*.  
+**sample00.c:** Two functions basic scheduling. used function of the SFS are **SFS_initialze**, **SFS_fork** and **SFS_dispatch**.  
 
-*sample01.c:* Used a common function to two functions scheduling. additional used functions of the SFS are *SFS_work* and *SFS_change*.  
+**sample01.c:** Used a common function to two functions scheduling. additional used functions of the SFS are **SFS_work** and **SFS_change**.  
 
-*sample02.c:* Two functions unregister a scheduling list by myself and the main function monitor it. used function of the SFS are SFS_initialize, SFS_fork, SFS_dispatch and *SFS_kill*.  
+**sample02.c:** Two functions unregister a scheduling list by myself and the main function monitor it. used function of the SFS are SFS_initialize, SFS_fork, SFS_dispatch and **SFS_kill**.  
 
-*sample03.c:* The master task to control state of the slave task. used function of SFS are SFS_initialize, SFS_fork, SFS_dispatch, SFS_work, SFS_chagne, SFS_kill and *SFS_otherWork*.  
+**sample03.c:** The master task to control state of the slave task. used function of SFS are SFS_initialize, SFS_fork, SFS_dispatch, SFS_work, SFS_chagne, SFS_kill and **SFS_otherWork**.  
 
 ## In Future
 FIFO control function.  

@@ -19,7 +19,7 @@ void regist_task1(void)
 	ws = SFS_work();
 
 	ws->task_no = 1;
-	SFS_change("TASK1", common_task);
+	SFS_change("TASK1", 0, common_task);
 }
 
 void regist_task2(void)
@@ -28,7 +28,7 @@ void regist_task2(void)
 	ws = SFS_work();
 
 	ws->task_no = 2;
-	SFS_change("TASK2", common_task);
+	SFS_change("TASK2", 0, common_task);
 }
 
 int main(void)
