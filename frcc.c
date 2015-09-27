@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include "frcc.h"
 
 /* The Mini FRC is an atomically control version of a free run counter. */
