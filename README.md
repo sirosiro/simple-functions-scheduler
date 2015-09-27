@@ -20,6 +20,10 @@ The SFS library are not depend to any platform and any compiler but the sample p
 
 **sample03.c:** The master task to control state of the slave task. used function of SFS are SFS_initialize, SFS_fork, SFS_dispatch, SFS_work, SFS_chagne, SFS_kill and **SFS_otherWork**.  
 
+
+**sample_frcc01.c** Two functions are get clock from a minimum free run counter and control execution time myself. used function of the FRCC are the **GetFreeRunCounterMini**.  
+
+
 ## In Future
 FIFO control function.  
 Event control function.  

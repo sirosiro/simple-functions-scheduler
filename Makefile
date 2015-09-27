@@ -1,5 +1,5 @@
-COMMTOOLS=sfs.c
-CSRCS=sample00.c sample01.c sample02.c sample03.c
+COMMTOOLS=sfs.c frcc.c
+CSRCS=sample00.c sample01.c sample02.c sample03.c sample_frcc01.c
 
 OBJS=$(CSRCS:.c=.o) $(COMMTOOLS:.c=.o)
 PROGS=$(CSRCS:.c=.exe)
@@ -32,3 +32,4 @@ gprof :
 	gprof sample01.exe gmon.out > sample01.prof
 	gprof sample02.exe gmon.out > sample02.prof
 	gprof sample03.exe gmon.out > sample03.prof
+	gprof sample_frcc01.exe gmon.out > sample_frcc01.prof
