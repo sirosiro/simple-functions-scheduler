@@ -4,7 +4,7 @@
 The purpose of this project is to provide a simplified scheduling functions without the use of any standard library of the C language.
 
 ## Requirement
-The SFS library are not depend to any platform and any compiler but the sample programs require the MinGW environment.  
+The SFS library does not depend on any platform and any compiler. But the sample programs require the MinGW environment.  
 
 ## Usage
  make  
@@ -16,10 +16,9 @@ The SFS library are not depend to any platform and any compiler but the sample p
 
 **sample01.c:** Used a common function to two functions scheduling. additional used functions of the SFS are **SFS_work** and **SFS_change**.  
 
-**sample02.c:** Two functions unregister a scheduling list by myself and the main function monitor it. used function of the SFS are SFS_initialize, SFS_fork, SFS_dispatch and **SFS_kill**.  
+**sample02.c:** Two functions unregister a scheduling list by myself and the main function monitors it. used function of the SFS are SFS_initialize, SFS_fork, SFS_dispatch and **SFS_kill**.  
 
 **sample03.c:** The master task to control state of the slave task. used function of SFS are SFS_initialize, SFS_fork, SFS_dispatch, SFS_work, SFS_chagne, SFS_kill and **SFS_otherWork**.  
-
 
 **sample_frcc01.c** Two functions are get clock from a minimum free run counter and control execution time myself. used function of the FRCC are the **GetFreeRunCounterMini**.  
 
@@ -46,5 +45,5 @@ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
 FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
