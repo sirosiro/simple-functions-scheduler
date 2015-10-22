@@ -18,7 +18,7 @@ all: $(PROGS)
 
 $(PROGS) : $(OBJS)
 	$(LD) $(@:.exe=.o) $(COMMTOOLS:.c=.o) -o $@ $(LDFLAGS)
-	$@
+	./$@
 
 clean :
 	rm -rf $(OBJS) $(PROGS)
