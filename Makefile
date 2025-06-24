@@ -5,8 +5,8 @@ OBJS=$(CSRCS:.c=.o) $(COMMTOOLS:.c=.o)
 PROGS=$(CSRCS:.c=.exe)
 
 CC = gcc
-CFLAGS = -c -ansi -O -Wall -coverage -pg
-LDFLAGS = -lgcov -pg
+CFLAGS = -c -ansi -O -Wall --coverage -pg
+LDFLAGS = --coverage -pg -lpthread
 LIBS =
 LD = gcc
 
