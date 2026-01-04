@@ -4,12 +4,47 @@
 The purpose of this project is to provide a simplified scheduling functions without the use of any standard library of the C language.
 
 ## Requirement
-The SFS library does not depend on any platform and any compiler. But the sample programs require the MinGW environment.  
+The SFS library does not depend on any platform. The sample programs require a `gcc` compiler environment, such as MinGW on Windows.
+
+On macOS, using the profiling feature (`make gprof`) requires the full **Xcode** application to be installed from the App Store, as it depends on the `xctrace` utility.
 
 ## Usage
- make  
- make gprof  
- make gcov  
+The `Makefile` will use `gcc` as the default compiler. If you need to use a specific version or a different C compiler, you can specify it via the `CC` variable.
+
+*   **`make`**  
+    Builds all sample programs.
+    ```sh
+    # Use the default gcc compiler
+    make
+    
+    # Use a specific version of gcc
+    make CC=gcc-15
+    ```
+
+*   **`make gcov`**  
+    Generates code coverage reports (`.gcov` files) for all source files.
+    ```sh
+    make gcov
+    
+    # Ensure gcov version matches the compiler
+    make gcov CC=gcc-15
+    ```
+
+*   **`make gprof`**  
+    Generates profiling output.
+    *   On Linux, this creates `.prof` files using `gprof`.
+    *   On macOS, this creates a `sample00.trace` file using `xctrace`, which can be opened with the Instruments application.
+    ```sh
+    make gprof
+    
+    make gprof CC=gcc-15
+    ```
+
+*   **`make clean`**  
+    Removes all built executables, object files, and report files (`.g*`, `.out`, `.prof`, `.trace`).
+    ```sh
+    make clean
+    ```
 
 ## Description of sample programs
 **sample00.c:** Two functions basic scheduling. used function of the SFS are **SFS_initialze**, **SFS_fork** and **SFS_dispatch**.  
