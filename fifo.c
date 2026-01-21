@@ -1,7 +1,9 @@
 #include "fifo.h"
 
 /*
- * Returns the size of an element in bytes based on its type.
+ * @brief A static helper to centralize the logic for determining element size.
+ * @rationale This avoids scattering `sizeof` calls throughout the code and
+ *            keeps the type-to-size mapping in a single location.
  */
 static unsigned int get_element_size(enum FIFO_ElementType type)
 {
