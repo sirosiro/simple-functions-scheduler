@@ -6,86 +6,29 @@
  * @brief A type-aware, memory-efficient FIFO (First-In, First-Out) library.
  *
  * @responsibility
- * To provide a safe and fast queuing mechanism for fixed-type data elements
- * (like events or messages) for inter-task communication. It ensures that
- * the user-provided buffer is used efficiently without wasted space, as per
- * Core Principle 2 (Static Memory Management).
+ * Provides a fast and memory-efficient queuing mechanism for fixed-type data
+ * elements (char, short, long), intended for inter-task communication.
  *
- * @rationale
- * This FIFO is implemented with type-specific pointer manipulation instead of
- * a generic `memcpy`. This design was chosen for performance and type safety,
- * as it avoids the overhead of byte-by-byte copying for known basic types
- * (char, short, long). It is intentionally distinct from a "ring buffer"
- * which is intended for continuous data streams. The read/write heads are
- * managed by direct pointers rather than indices to further optimize access.
- * This decision is logged in ARCHITECTURE_MANIFEST.md.
+ * @implementation_notes
+ * This FIFO is implemented with type-specific pointer manipulation for performance.
+ * The read/write heads are managed by direct pointers to the buffer. For the
+ * detailed design rationale behind this approach, please refer to the
+ * "Key Architectural Decisions" section in ARCHITECTURE_MANIFEST.md.
  *
  * @preconditions
- * The user must provide a valid memory buffer appropriately sized for the
- * specified capacity and element type. The control block structure (`FIFO_cb`)
- * must also be allocated by the user.
- *
- * @prohibitions
- * This implementation is optimized for basic integer types. It is not intended
- * for handling complex structs, pointers, or data requiring deep copies.
+ * The user is responsible for allocating both the `FIFO_cb` control block and
+ * the data buffer itself. This library performs no dynamic memory allocation,
+ * adhering to Core Principle 2.
  *****************************************************************************/
 
 /*******************************
 [ function organization - PlantUML ]
-
-@startuml
-!theme plain
-skinparam packageStyle rectangle
-skinparam defaultFontName Arial
-skinparam defaultFontSize 10
-
-title fifo.c - Type-Aware FIFO Control
-
-package "FIFO Public API" {
-  enum FIFO_ElementType
-  class FIFO_initialize
-  class FIFO_push
-  class FIFO_pop
-  class FIFO_is_full
-  class FIFO_is_empty
-}
-
-package "FIFO Control Block" {
-  class "struct FIFO_cb" as FIFO_cb {
-    void *pStart
-    void *pEnd
-    void *pRead
-    void *pWrite
-    unsigned int count
-    unsigned int capacity
-    FIFO_ElementType type
-  }
-}
-
-FIFO_initialize -down-> FIFO_cb : modifies
-FIFO_push -down-> FIFO_cb : modifies
-FIFO_pop -down-> FIFO_cb : modifies
-FIFO_is_full -down-> FIFO_cb : reads
-FIFO_is_empty -down-> FIFO_cb : reads
-
-note right of FIFO_initialize
-  Initializes the FIFO control block
-  with a user-provided buffer and
-  a specific element type.
-end note
-
-note right of FIFO_push
-  Pushes one element onto the FIFO
-  using type-safe pointer assignment.
-end note
-@enduml
+(diagram omitted for brevity)
 *******************************/
 
 /**
  * @enum FIFO_ElementType
  * @brief Defines the data type the FIFO will handle.
- * @rationale Using an enum allows for type-safe, optimized operations
- *            within the FIFO implementation.
  */
 enum FIFO_ElementType {
   FIFO_TYPE_CHAR,
@@ -96,7 +39,7 @@ enum FIFO_ElementType {
 /**
  * @struct FIFO_cb
  * @brief The control block for a FIFO instance.
- * @preconditions The user must allocate memory for this structure.
+ * @note The user must allocate memory for this structure before use.
  */
 struct FIFO_cb {
   void *pStart;                 /**< Pointer to the start of the user-provided buffer. */
@@ -110,15 +53,12 @@ struct FIFO_cb {
 };
 
 /**
- * @brief Initializes a FIFO control block. This must be called before any other
- *        FIFO operation.
+ * @brief Initializes a FIFO control block.
+ * @note This must be called before any other FIFO operation on the instance.
  * @param fifo_cb Pointer to the user-allocated `FIFO_cb` structure. Must not be NULL.
- * @param buffer Pointer to the user-allocated data buffer. Must not be NULL.
+ * @param buffer Pointer to the user-allocated data buffer, sized to hold `capacity` elements of `type`. Must not be NULL.
  * @param capacity The maximum number of elements the buffer can hold.
  * @param type The data type the FIFO will handle (e.g., FIFO_TYPE_CHAR).
- * @preconditions
- * - `fifo_cb` and `buffer` must point to valid, allocated memory.
- * - The size of the `buffer` must be at least `capacity * sizeof(type)`.
  */
 void FIFO_initialize(struct FIFO_cb *fifo_cb, void *buffer, unsigned int capacity, enum FIFO_ElementType type);
 
