@@ -1,4 +1,4 @@
-COMMTOOLS=sfs.c frcc.c
+COMMTOOLS=sfs.c frcc.c ring_buffer.c
 CSRCS=sample00.c sample01.c sample02.c sample03.c sample_frcc01.c
 
 OBJS=$(CSRCS:.c=.o) $(COMMTOOLS:.c=.o)
@@ -14,7 +14,7 @@ GCOV ?= $(subst gcc,gcov,$(CC))
 CFLAGS = -c -ansi -O -Wall -coverage -fno-builtin-strncpy
 
 # Generic LDFLAGS for gcov
-LDFLAGS = -lgcov
+LDFLAGS = --coverage
 LIBS =
 # Use the same command for linking by default
 LD ?= $(CC)
