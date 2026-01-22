@@ -1,5 +1,5 @@
-COMMTOOLS=sfs.c frcc.c ring_buffer.c
-CSRCS=sample00.c sample01.c sample02.c sample03.c sample_frcc01.c
+COMMTOOLS=sfs.c frcc.c fifo.c ring_buffer.c
+CSRCS=sample00.c sample01.c sample02.c sample03.c sample_frcc01.c sample04.c
 
 OBJS=$(CSRCS:.c=.o) $(COMMTOOLS:.c=.o)
 PROGS=$(CSRCS:.c=.exe)
@@ -14,7 +14,8 @@ GCOV ?= $(subst gcc,gcov,$(CC))
 CFLAGS = -c -ansi -O -Wall -coverage -fno-builtin-strncpy
 
 # Generic LDFLAGS for gcov
-LDFLAGS = --coverage
+# Added -lpthread for sample04 and timer simulation
+LDFLAGS = --coverage -lpthread
 LIBS =
 # Use the same command for linking by default
 LD ?= $(CC)
@@ -26,6 +27,7 @@ UNAME_S := $(shell uname -s)
 # Add -pg for gprof support on non-macOS systems
 ifneq ($(UNAME_S), Darwin)
     CFLAGS += -pg
+    LDFLAGS += -pg
 endif
 
 %.o : %.c
@@ -64,5 +66,6 @@ gprof:
 	gprof sample02.exe gmon.out > sample02.prof
 	gprof sample03.exe gmon.out > sample03.prof
 	gprof sample_frcc01.exe gmon.out > sample_frcc01.prof
+	gprof sample04.exe gmon.out > sample04.prof
 	@echo "Profiling complete. Results are in *.prof files."
 endif

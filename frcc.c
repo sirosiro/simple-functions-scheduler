@@ -1,3 +1,10 @@
+/*
+  frcc.c - Free Run Counter Module
+
+  This module provides two types of free run counters:
+    - Mini FRC: A simple `unsigned char` based counter.
+    - Standard FRC: A more complex `unsigned long` based counter with interrupt handling and gap checking features.
+*/
 #include "frcc.h"
 
 /* The Mini FRC is an atomically control version of a free run counter. */
