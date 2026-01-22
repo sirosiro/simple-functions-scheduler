@@ -56,6 +56,7 @@ The sample programs demonstrate the key functionalities of the library.
 *   **sample02.c:** A task terminates itself from the schedule using `SFS_kill`.
 *   **sample03.c:** A "master" task controls the state of a "slave" task using `SFS_otherWork`.
 *   **sample04.c:** Demonstrates using the FIFO library for safe inter-task communication between a producer and a consumer.
+*   **sample05.c:** Verifies the Ring Buffer library functionalities, including basic read/write, overwrite mode, and dependency injection for custom data copy functions.
 *   **sample_frcc01.c:** Demonstrates using the FRCC module for time-based task control. It uses the `gFreeRunCounterMini` variable as a time source and the `GetFreeRunGapMini` function to measure elapsed time.
 
 ## Future Plans
