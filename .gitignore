@@ -1,0 +1,8 @@
+*.o
+*.exe
+*.gcda
+*.gcno
+*.out
+*.prof
+*.trace
+.DS_Store
