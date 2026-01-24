@@ -101,7 +101,7 @@
         *   `name`: タスク名。関数内でコピーして使用するため、呼び出し元は自身のポインタ管理責任を持つ。
         *   `order`: タスクの優先度。数値が小さいほど高優先度。
         *   `entry_point`: タスクのメイン処理を行う関数へのポインタ。
-        *   戻り値: `0` (成功), `-1` (タスク制御ブロックの割り当て失敗)。
+        *   戻り値: `True` (成功), `False` (タスク制御ブロックの割り当て失敗)。
     *   `void *SFS_work(void)`:
         *   責務: 現在実行中のタスクに割り当てられた汎用ワークバッファへのポインタを返す。
         *   戻り値: `void*` (現在のタスクの `work` バッファへのポインタ)。
@@ -238,13 +238,14 @@
 
 - **提供するAPI (Public API):**
     - `typedef void (*rb_copy_func_t)(void* dest, const void* src, size_t len);`
-    - `rb_handle_t rb_init(void* buffer, size_t size, bool overwrite_on_full, rb_copy_func_t read_func, rb_copy_func_t write_func)`:
-        - **責務:** 提供されたメモリ領域(`buffer`)とサイズ(`size`)を使い、新しいリングバッファインスタンスを初期化する。
+    - `rb_bool rb_init(rb_handle_t handle, void* buffer, rb_size_t size, rb_bool overwrite_on_full, rb_copy_func_t read_func, rb_copy_func_t write_func)`:
+        - **責務:** 提供されたメモリ領域(`buffer`)とサイズ(`size`)を使い、提供されたハンドル(`handle`)が指す構造体を初期化する。
+        - `handle`: 初期化対象の `ring_buffer_t` 構造体へのポインタ。
         - `buffer`: リングバッファとして使用するメモリ領域へのポインタ。このポインタの管理責任は呼び出し元にある。
         - `size`: バッファのサイズ（バイト単位）。
-        - `overwrite_on_full`: `true`の場合、バッファが満杯の時に古いデータを上書きする。`false`の場合は書き込みを失敗させる。
+        - `overwrite_on_full`: `RB_TRUE`の場合、バッファが満杯の時に古いデータを上書きする。`RB_FALSE`の場合は書き込みを失敗させる。
         - `read_func`, `write_func`: データコピー用の関数ポインタ。`NULL`が指定された場合、ライブラリ内部のデフォルト実装が使用される。
-        - **戻り値:** 初期化されたリングバッファのハンドルを返す。失敗した場合は`NULL`を返す。
+        - **戻り値:** 初期化に成功した場合は `RB_TRUE`、失敗した場合は `RB_FALSE` を返す。
 
     - `size_t rb_write(rb_handle_t handle, const void* data, size_t length)`:
         - **責務:** `init`時に指定された`write_func`またはデフォルト実装を使い、指定されたデータをリングバッファに書き込む。
