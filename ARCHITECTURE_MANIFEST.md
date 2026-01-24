@@ -147,145 +147,20 @@
     *   **タスク解放 (`SFS_giveup`):** 双方向リンクリストからの要素削除。ヘッド、テール、中間からの削除を処理し、フリーリスト (`pPool`) に戻す。
 
 #### 4.2. FRCC (Free Run Clock Counter) モジュール
-
--   **責務 (Responsibility):**
-    *   ハードウェア（外部）によって周期的にインクリメントされるフリーランカウンタ（8ビット版と32ビット版）を提供する。
-    *   カウンタのロールオーバーを考慮した正確な時間差計算機能を提供する。
-    *   フリーランカウンタへの割り込み安全なアクセスを保証する。
-    *   ワンショットまたは繰り返し可能な時間経過チェック機能を提供する。
-
--   **提供するAPI (Public API):**
-    *   `unsigned char GetFreeRunGapMini(unsigned char vPastCount)`:
-        *   責務: 8ビットフリーランカウンタ `gFreeRunCounterMini` と過去の値 `vPastCount` との間の時間差を計算する。カウンタのロールオーバーを考慮する。
-        *   `vPastCount`: 過去のカウンタ値。
-        *   戻り値: `unsigned char` (経過時間)。
-    *   `void FRCInterrupt(void (*di)(void), void (*ei)(void))`:
-        *   責務: フリーランカウンタへの原子的なアクセスを保証するために使用される、割り込み禁止/許可関数を登録する。
-        *   `di`: 割り込み禁止関数へのポインタ。
-        *   `ei`: 割り込み許可関数へのポインタ。
-    *   `unsigned long GetFreeRunCounter(void)`:
-        *   責務: 現在の32ビットフリーランカウンタ `gFreeRunCounter` の値を割り込み安全に取得する。
-        *   戻り値: `unsigned long` (現在のカウンタ値)。
-    *   `unsigned long GetFreeRunGap(unsigned long vFarstCount, unsigned long vSecondCount)`:
-        *   責務: 2つの32ビットカウンタ値間の時間差を計算する。カウンタのロールオーバーを考慮する。
-        *   `vFarstCount`: 開始カウンタ値。
-        *   `vSecondCount`: 終了カウンタ値。
-        *   戻り値: `unsigned long` (経過時間)。
-    *   `void FRCGapCheckStart(FRC *vGapChk, unsigned long vStopGap)`:
-        *   責務: 時間経過チェック用の `FRC` 構造体を初期化する。現在のカウンタ値を `StartPoint` として記録し、目標経過時間 `vStopGap` を設定する。
-        *   `vGapChk`: 初期化する `FRC` 構造体へのポインタ。
-        *   `vStopGap`: チェックする時間間隔。
-    *   `unsigned long FRCGapCheck(FRC *vGapChk)`:
-        *   責務: `FRCGapCheckStart` で設定された時間間隔が経過したかをチェックする。
-        *   `vGapChk`: チェックする `FRC` 構造体へのポインタ。
-        *   戻り値: `0` (時間経過済み), `それ以外の値` (残り時間)。
-    *   `void FRCGapCheckStop(FRC *vGapChk)`:
-        *   責務: `FRC` 構造体の時間経過チェックを停止し、無効化する。
-        *   `vGapChk`: 停止する `FRC` 構造体へのポインタ。
-
--   **主要なデータ構造 (Key Data Structures):**
-    *   `unsigned char gFreeRunCounterMini`: 8ビットフリーランカウンタ（グローバル変数）。
-    *   `unsigned long gFreeRunCounter`: 32ビットフリーランカウンタ（グローバル変数）。
-    *   `struct FRCGapChk_tg`:
-        ```c
-        typedef struct FRCGapChk_tg {
-          char OneShot;          // 0: 経過済み, 1: 監視中, -1: 未使用/停止
-          unsigned long StartPoint;   // 測定開始時のFreeRunCounter値
-          unsigned long StopGap;      // 監視する時間間隔
-        }FRC;
-        ```
-    *   `static void (*_di)(void)`: 割り込み禁止関数への内部ポインタ。
-    *   `static void (*_ei)(void)`: 割り込み許可関数への内部ポインタ。
-
--   **状態とライフサイクル (State and Lifecycle):**
-    *   `FRC` 構造体の `OneShot` メンバにより、タイマーの状態が管理される。
-    *   `OneShot = 1`: 監視中。
-    *   `OneShot = 0`: 時間経過済み（ワンショット）。
-    *   `OneShot = -1`: 未使用または停止状態。
-
--   **重要なアルゴリズム (Key Algorithms):**
-    *   **カウンタロールオーバー対応の時間差計算:**
-        *   `if (iNowCount >= vPastCount) { return iNowCount - vPastCount; } else { return ((型)-1)-vPastCount+iNowCount; }`
-        *   これにより、カウンタが最大値から0にロールオーバーした場合でも正確な時間差を計算できる。
-    *   **原子的なカウンタ読み出し:** 登録された割り込み禁止/許可関数 (`_di`, `_ei`) を利用して、グローバルカウンタの読み出し中に割り込みが発生しないことを保証する。
+*   **詳細仕様:** `libs/frcc/ARCHITECTURE_MANIFEST.md` を参照してください。
+    *   **概要:** ハードウェア（外部）によって周期的にインクリメントされるフリーランカウンタを管理し、正確な時間差計算機能を提供します。
 
 #### 4.3. FIFO (First-In, First-Out)
-*   **責務 (Responsibility):**
-    *   タスク間で使われる、固定サイズのデータ要素（イベントやメッセージ）をキューイングする責務を負う。
-    *   本コンポーネントは「イベント」のような個別データを扱うことを主目的とする。計測データのような連続したストリームデータを扱うのは「リングバッファ」コンポーネントの責務とし、明確に分離する。
-*   **提供するAPI (Public API):**
-    *   `void FIFO_initialize(struct FIFO_cb *fifo_cb, void *buffer, unsigned int capacity, enum FIFO_ElementType type)`: FIFO制御ブロックを初期化する。
-        *   `type`: このFIFOが `char`, `short`, `long` のどの型を扱うかを指定する。バッファのメモリ効率とアクセス方法は、この型に基づいて最適化される。
-    *   `int FIFO_push(struct FIFO_cb *fifo_cb, const void *element)`: FIFOに1要素をプッシュする。
-    *   `int FIFO_pop(struct FIFO_cb *fifo_cb, void *element)`: FIFOから1要素をポップする。
-*   **主要なデータ構造 (Key Data Structures):**
-    *   `enum FIFO_ElementType`: FIFOが扱うデータ型を定義する。
-    *   `struct FIFO_cb`: FIFOの制御ブロック。バッファの開始/終了/読み取り/書き込み位置を、インデックスではなく `void*` ポインタで直接管理する。
-*   **状態とライフサイクル (State and Lifecycle):**
-    *   `FIFO_initialize` によって「空」状態で生成される。
-    *   `FIFO_push` によってデータが追加され、「通常」状態または「満杯」状態に遷移する。
-    *   `FIFO_pop` によってデータが取り出され、「通常」状態または「空」状態に遷移する。
-*   **重要なアルゴリズム (Key Algorithms):**
-    *   **型ごとのポインタアクセス:** `push`/`pop` 処理時、`type` メンバに応じて `void*` ポインタを適切な型 (`char*`, `short*`, `long*`) にキャストし、直接代入を行う。これにより `memcpy` を回避し、型に最適化されたメモリアクセスを実現する。
-    *   **ポインタベースのリングバッファ管理:** バッファの読み書き位置を整数インデックスではなくポインタで直接管理する。ポインタがバッファの終端 (`pEnd`) に達したら、始端 (`pStart`) に戻すことでリング動作を実現する。
+*   **詳細仕様:** `libs/fifo/ARCHITECTURE_MANIFEST.md` を参照してください。
+    *   **概要:** タスク間で使われる、固定サイズのデータ要素（イベントやメッセージ）をキューイングする機能を提供します。
 
 #### 4.4. リングバッファライブラリ (Ring Buffer Library)
+*   **詳細仕様:** `libs/ring_buffer/ARCHITECTURE_MANIFEST.md` を参照してください。
+    *   **概要:** バイトストリームの効率的かつ安全な書き込み・読み出し機能を提供します。データコピー処理の外部注入をサポートします。
 
-- **責務 (Responsibility):**
-    - 固定サイズのメモリ領域をリングバッファとして管理し、バイトストリームの効率的かつ安全な書き込み・読み出し機能を提供する。
-    - データコピー処理（読み書き）を外部から注入（Dependency Injection）可能にすることで、ハードウェア（DMA等）への最適化を可能にする。注入されない場合は、自前実装の標準的なメモリコピー機能を提供する。
-    - 割り込みコンテキストと通常タスクコンテキストの両方から安全に呼び出せる（リエントラントな）関数設計を目指す。ただし、複数タスク/割り込みからの同時アクセスにおける排他制御は、ライブラリの利用者側の責任範囲とする。
+### 5. テストと検証 (Testing and Verification)
 
-- **提供するAPI (Public API):**
-    - `typedef void (*rb_copy_func_t)(void* dest, const void* src, size_t len);`
-    - `rb_bool rb_init(rb_handle_t handle, void* buffer, rb_size_t size, rb_bool overwrite_on_full, rb_copy_func_t read_func, rb_copy_func_t write_func)`:
-        - **責務:** 提供されたメモリ領域(`buffer`)とサイズ(`size`)を使い、提供されたハンドル(`handle`)が指す構造体を初期化する。
-        - `handle`: 初期化対象の `ring_buffer_t` 構造体へのポインタ。
-        - `buffer`: リングバッファとして使用するメモリ領域へのポインタ。このポインタの管理責任は呼び出し元にある。
-        - `size`: バッファのサイズ（バイト単位）。
-        - `overwrite_on_full`: `RB_TRUE`の場合、バッファが満杯の時に古いデータを上書きする。`RB_FALSE`の場合は書き込みを失敗させる。
-        - `read_func`, `write_func`: データコピー用の関数ポインタ。`NULL`が指定された場合、ライブラリ内部のデフォルト実装が使用される。
-        - **戻り値:** 初期化に成功した場合は `RB_TRUE`、失敗した場合は `RB_FALSE` を返す。
+このプロジェクトでは、サンプルコードを機能テストおよびリファレンス実装として位置づけています。
 
-    - `size_t rb_write(rb_handle_t handle, const void* data, size_t length)`:
-        - **責務:** `init`時に指定された`write_func`またはデフォルト実装を使い、指定されたデータをリングバッファに書き込む。
-        - **戻り値:** 実際に書き込めたバイト数を返す。バッファが満杯で書き込めなかった場合、`overwrite_on_full`が`false`なら0を返す。`overwrite_on_full`が`true`の場合は、要求された`length`を返す（古いデータは上書きされる）。
-
-    - `size_t rb_read(rb_handle_t handle, void* buffer, size_t length)`:
-        - **責務:** `init`時に指定された`read_func`またはデフォルト実装を使い、リングバッファからデータを読み出し、指定された`buffer`に格納する。読み出されたデータはバッファから削除される。
-        - **戻り値:** 実際に読み出せたバイト数を返す。
-
-    - `size_t rb_peek(rb_handle_t handle, void* buffer, size_t length)`:
-        - **責務:** リングバッファからデータを読み出すが、バッファからは削除しない（読み出し位置は変更されない）。データコピーには`init`時に指定された`read_func`またはデフォルト実装が使われる。
-        - **戻り値:** 実際に読み出せた（覗き見できた）バイト数を返す。
-
-    - `size_t rb_get_free_space(rb_handle_t handle)`:
-        - **責務:** バッファの空き容量をバイト単位で返す。
-        - **戻り値:** 空きバイト数。
-
-    - `size_t rb_get_used_space(rb_handle_t handle)`:
-        - **責務:** バッファ内で使用されているデータ量をバイト単位で返す。
-        - **戻り値:** 使用中のバイト数。
-
-- **主要なデータ構造 (Key Data Structures):**
-    - `ring_buffer_t` (ハンドルとして利用者に返される構造体):
-        - `uint8_t* buffer`: ユーザーから提供されたバッファ領域へのポインタ。
-        - `size_t size`: バッファの総サイズ。
-        - `size_t head`: 書き込み位置（次に書き込むべきインデックス）。
-        - `size_t tail`: 読み出し位置（次に読み出すべきインデックス）。
-        - `bool is_full`: バッファが満杯かどうかを示すフラグ (`head == tail` の状態が空か満杯かを区別するために使用)。
-        - `bool overwrite_on_full`: 満杯時の上書き許可フラグ。
-        - `rb_copy_func_t read_from_ring`: 読み出し時に使用するデータコピー関数。
-        - `rb_copy_func_t write_to_ring`: 書き込み時に使用するデータコピー関数。
-
-- **状態とライフサイクル (State and Lifecycle):**
-    - **Uninitialized:** `rb_init`が呼び出される前の状態。
-    - **Empty:** バッファにデータがない状態 (`head == tail` かつ `is_full == false`)。
-    - **Normal:** データが一部入っている状態。
-    - **Full:** バッファが満杯の状態 (`head == tail` かつ `is_full == true`)。
-
-- **重要なアルゴリズム (Key Algorithms):**
-    - **データコピー:** `read_from_ring` / `write_to_ring` の関数ポインタ経由で実処理を呼び出す。ポインタが`NULL`の場合は、自前実装のバイト単位ループによるコピー処理を呼び出す。
-    - **インデックスのラップアラウンド:** `head`および`tail`ポインタは、バッファの終端に達した場合、モジュロ演算（`% size`）または同等の比較処理によって0に戻る。パフォーマンスを重視し、`if (index >= size) index = 0;` のような分岐を基本とする。
-    - **空き/使用容量の計算:** `head`と`tail`の位置関係から計算する。`head >= tail`の場合と`head < tail`（ラップアラウンド発生後）の場合で計算方法が異なる。
-    - **上書き処理 (`overwrite_on_full == true`):** 書き込み要求時にバッファが満杯だった場合、書き込むデータ長に応じて`tail`（読み出しポインタ）も進めることで、古いデータを捨てる。
+*   **詳細仕様:** `tests/ARCHITECTURE_MANIFEST.md` を参照してください。
+    *   **概要:** SFSおよび各ライブラリの単体テスト、機能テスト、使用例を管理しています。開発時はこれらのテストが常にパスする状態を維持します。

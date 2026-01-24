@@ -1,5 +1,5 @@
-COMMTOOLS=sfs.c frcc.c fifo.c ring_buffer.c
-CSRCS=sample00.c sample01.c sample02.c sample03.c sample04.c sample05.c sample_frcc01.c 
+COMMTOOLS=sfs.c libs/frcc/frcc.c libs/fifo/fifo.c libs/ring_buffer/ring_buffer.c
+CSRCS=tests/sample00.c tests/sample01.c tests/sample02.c tests/sample03.c tests/sample04.c tests/sample05.c tests/sample_frcc01.c 
 
 OBJS=$(CSRCS:.c=.o) $(COMMTOOLS:.c=.o)
 PROGS=$(CSRCS:.c=.exe)
@@ -11,7 +11,8 @@ GCOV ?= $(subst gcc,gcov,$(CC))
 
 # Base CFLAGS. -pg is added conditionally below.
 # -fno-builtin-strncpy is added to suppress warnings about the custom strncpy.
-CFLAGS = -c -ansi -O -Wall -coverage -fno-builtin-strncpy
+# Added include paths for separated libraries and root (for sfs.h)
+CFLAGS = -c -ansi -O -Wall -coverage -fno-builtin-strncpy -I. -Ilibs/fifo -Ilibs/frcc -Ilibs/ring_buffer
 
 # Generic LDFLAGS for gcov
 # Added -lpthread for sample04 and timer simulation
@@ -41,8 +42,10 @@ $(PROGS) : $(OBJS)
 	./$@
 
 clean :
-	rm -rf $(OBJS) $(PROGS)
-	rm -rf *.g* *.out *.prof *.trace
+	@echo "Cleaning up generated files..."
+	rm -f *.o *.exe *.gcda *.gcno *.gcov gmon.out *.prof *.trace
+	find libs tests -type f \( -name "*.o" -o -name "*.exe" -o -name "*.gcda" -o -name "*.gcno" \) -delete
+	@echo "Clean complete."
 
 gcov:
 	$(GCOV) *.gcda
