@@ -13,12 +13,13 @@ A lightweight, cooperative task scheduler and free-run counter library for C. It
 
 ## Components
 
-This library consists of four main components:
+This library consists of five main components:
 
 *   **SFS (Simple Functions Scheduler)**: The core scheduler. It manages the lifecycle of tasks (creation, dispatching, and termination).
 *   **FRCC (Free Run Counter)**: A utility for timekeeping. It provides counter functionalities with overflow handling and support for atomic access, which is crucial for timer interrupts.
 *   **FIFO (First-In, First-Out)**: A general-purpose FIFO queue with a fixed element size, designed for inter-task communication and event queuing.
 *   **Ring Buffer**: A flexible byte-stream ring buffer for handling continuous data streams, supporting custom read/write functions for hardware optimization (e.g., DMA).
+*   **Matrix State Machine**: A deterministic state management library using a 3D matrix (Mode x State x Event) for efficient and maintainable state transitions.
 
 ## Requirements
 
@@ -57,11 +58,12 @@ The sample programs demonstrate the key functionalities of the library.
 *   **sample03.c:** A "master" task controls the state of a "slave" task using `SFS_otherWork`.
 *   **sample04.c:** Demonstrates using the FIFO library for safe inter-task communication between a producer and a consumer.
 *   **sample05.c:** Verifies the Ring Buffer library functionalities, including basic read/write, overwrite mode, and dependency injection for custom data copy functions.
+*   **sample06.c:** Demonstrates the Matrix State Machine library, including state transitions across different modes and log callback injection.
 *   **sample_frcc01.c:** Demonstrates using the FRCC module for time-based task control. It uses the `gFreeRunCounterMini` variable as a time source and the `GetFreeRunGapMini` function to measure elapsed time.
 
 ## Future Plans
 
-*   Event control function.
+*   All initially planned features, including the Event Control Function (Matrix State Machine), have been successfully implemented.
 
 ## License
 

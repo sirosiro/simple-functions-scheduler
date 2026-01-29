@@ -1,5 +1,5 @@
-COMMTOOLS=sfs.c libs/frcc/frcc.c libs/fifo/fifo.c libs/ring_buffer/ring_buffer.c
-CSRCS=tests/sample00.c tests/sample01.c tests/sample02.c tests/sample03.c tests/sample04.c tests/sample05.c tests/sample_frcc01.c 
+COMMTOOLS=sfs.c libs/frcc/frcc.c libs/fifo/fifo.c libs/ring_buffer/ring_buffer.c libs/matrix/state_machine.c
+CSRCS=tests/sample00.c tests/sample01.c tests/sample02.c tests/sample03.c tests/sample04.c tests/sample05.c tests/sample_frcc01.c tests/sample06.c 
 
 OBJS=$(CSRCS:.c=.o) $(COMMTOOLS:.c=.o)
 PROGS=$(CSRCS:.c=.exe)
@@ -12,7 +12,7 @@ GCOV ?= $(subst gcc,gcov,$(CC))
 # Base CFLAGS. -pg is added conditionally below.
 # -fno-builtin-strncpy is added to suppress warnings about the custom strncpy.
 # Added include paths for separated libraries and root (for sfs.h)
-CFLAGS = -c -ansi -O -Wall -coverage -fno-builtin-strncpy -I. -Ilibs/fifo -Ilibs/frcc -Ilibs/ring_buffer
+CFLAGS = -c -ansi -O -Wall -coverage -fno-builtin-strncpy -I. -Ilibs/fifo -Ilibs/frcc -Ilibs/ring_buffer -Ilibs/matrix
 
 # Generic LDFLAGS for gcov
 # Added -lpthread for sample04 and timer simulation
@@ -71,5 +71,6 @@ gprof:
 	gprof sample04.exe gmon.out > sample04.prof
 	gprof sample05.exe gmon.out > sample05.prof
 	gprof sample_frcc01.exe gmon.out > sample_frcc01.prof
+	gprof sample06.exe gmon.out > sample06.prof
 	@echo "Profiling complete. Results are in *.prof files."
 endif
